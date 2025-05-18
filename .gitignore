@@ -10,7 +10,6 @@ env/
 
 # dotenv secrets
 .env
-.env.*
 
 # VS Code
 .vscode/
