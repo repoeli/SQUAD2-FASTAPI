@@ -6,30 +6,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     services:
-      postgres: { … }  # as above
-    env:
-      DATABASE_URL: postgresql://grc_user:grc_pass@localhost:5432/grc_dashboard
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install dependencies
-        run: |
-          python -m pip install -r backend/requirements.txt
-      - name: Run tests
-        working-directory: backend
-        run: |
-          pytest -q
-          
-    services:
       postgres:
         image: postgres:16
         env:
           POSTGRES_USER: grc_user
           POSTGRES_PASSWORD: grc_pass
-          POSTGRES_DB: grc_dashboard    # <- ensure this matches your tests
+          POSTGRES_DB: grc_dashboard  # Ensure this matches your application's configuration
         ports: ['5432:5432']
         options: >-
           --health-cmd="pg_isready -U grc_user"
@@ -42,4 +24,4 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r backend/requirements.txt pytest
-      - run: pytest -q
+      - run: pytest -q backend/tests  # Ensure the path to your tests is specified
