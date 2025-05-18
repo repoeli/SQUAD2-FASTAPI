@@ -11,7 +11,7 @@ jobs:
         env:
           POSTGRES_USER: grc_user
           POSTGRES_PASSWORD: grc_pass
-          POSTGRES_DB: grc_dashboard  # Ensure this matches your application's configuration
+          POSTGRES_DB: grc_dashboard
         ports: ['5432:5432']
         options: >-
           --health-cmd="pg_isready -U grc_user"
@@ -24,4 +24,4 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r backend/requirements.txt pytest
-      - run: pytest -q backend/tests  # Ensure the path to your tests is specified
+      - run: pytest -q
