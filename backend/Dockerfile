@@ -1,28 +1,30 @@
-# Stage 1: build with all deps
-FROM python:3.13-alpine AS builder
+# ── Alpine-based image for minimal vulnerabilities ──────────────────────────────
+FROM python:alpine
 
-# install build-time deps for any C‐extensions
-RUN apk add --no-cache gcc musl-dev postgresql-dev
+# Install build dependencies, then remove them to keep image small
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+    pip install --no-cache-dir --upgrade pip
 
 WORKDIR /app
+
+# Install your dependencies (including pytest)
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir pytest && \
+    apk del .build-deps
 
-# install everything (uvicorn included)
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Stage 2: runtime
-FROM python:3.13-alpine
-
-WORKDIR /app
-
-# copy libraries and console‐scripts
-COPY --from=builder /usr/local/lib/python3.13/site-packages \
-                   /usr/local/lib/python3.13/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
-
+# Copy application code
 COPY app/ ./app/
 
+# Copy tests directory if needed
+COPY tests/ ./tests/
+
+# Copy pytest configuration if needed
+COPY pytest.ini ./
+
+# Expose the port you're running on
 EXPOSE 8181
 
-# ← invoke via python -m to avoid missing uvicorn script
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8181", "--reload"]
+# Run Uvicorn via python -m so path is always correct
+CMD ["python", "-m", "uvicorn", "app.main:app", \
+     "--host", "0.0.0.0", "--port", "8181", "--reload"]

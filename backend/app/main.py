@@ -19,5 +19,11 @@ app.add_middleware(
     allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
 
+# Add health check endpoint for tests
+@app.get("/")
+def health_check():
+    return {"status": "ok"}
+
+# Include routers
 app.include_router(crud_router)
 app.include_router(vt_router)

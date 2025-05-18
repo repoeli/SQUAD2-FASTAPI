@@ -35,3 +35,7 @@ htmlcov/
 
 # IDE settings
 .idea/
+
+# ssh keys
+repo
+repo.pub
