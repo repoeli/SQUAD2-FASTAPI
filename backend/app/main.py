@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # ← relative import (works because main.py and crud_router.py share the same folder)
 from app.crud_router import router as crud_router
 from app.vt_router    import router as vt_router
+from app.threat_intel.router import router as threat_intel_router
 from dotenv       import load_dotenv
 
 load_dotenv()      # pulls VT_API_KEY from .env
@@ -27,3 +28,4 @@ def health_check():
 # Include routers
 app.include_router(crud_router)
 app.include_router(vt_router)
+app.include_router(threat_intel_router)

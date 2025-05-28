@@ -16,15 +16,12 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Copy application code
 COPY app/ ./app/
 
-# Copy tests directory if needed
-COPY tests/ ./tests/
-
-# Copy pytest configuration if needed
-COPY pytest.ini ./
+# Copy run.py
+COPY run.py .
 
 # Expose the port you're running on
 EXPOSE 8181
 
 # Run Uvicorn via python -m so path is always correct
 CMD ["python", "-m", "uvicorn", "app.main:app", \
-     "--host", "0.0.0.0", "--port", "8181", "--reload"]
+    "--host", "0.0.0.0", "--port", "8181", "--reload"]
