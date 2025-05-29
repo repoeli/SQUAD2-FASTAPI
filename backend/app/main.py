@@ -25,6 +25,9 @@ app.add_middleware(
 def health_check():
     return {"status": "ok"}
 
+# SECURITY NOTE: Authentication deliberately omitted in student/demo edition.
+# TODO: Implement JWT authentication with role-based access before any production use.
+
 # Include routers
 app.include_router(crud_router)
 app.include_router(vt_router)
